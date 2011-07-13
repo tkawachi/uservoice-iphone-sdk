@@ -135,8 +135,16 @@
 }
 
 - (void)addGradientBackground {
+	NSLog(@"not spinning");
+	return;
+	NSLog(@"spinning");
 	CAGradientLayer *gradient = [CAGradientLayer layer];
-	gradient.frame = self.view.bounds;
+	CGRect f = self.view.bounds;
+	float max = MAX(f.size.height,f.size.width);
+	f.size.height = max;
+	f.size.width = max;
+	
+	gradient.frame = f;
 	gradient.colors = [NSArray arrayWithObjects:
 					   (id)[[UVStyleSheet darkBgColor] CGColor],
 					   (id)[[UVStyleSheet lightBgColor] CGColor],
@@ -149,10 +157,11 @@
 #pragma mark ===== helper methods for table views =====
 
 - (void)removeBackgroundFromCell:(UITableViewCell *)cell {
-	UIView *backView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
+	UIView *backView = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width,71)] autorelease];
 	backView.backgroundColor = [UIColor clearColor];
 	cell.backgroundView = backView;
 	cell.backgroundColor = [UIColor clearColor];
+	
 }
 
 - (UITableViewCell *)createCellForIdentifier:(NSString *)identifier
@@ -164,8 +173,9 @@
     if (cell == nil) {
         cell = [[[UITableViewCell alloc] initWithStyle:style reuseIdentifier:identifier] autorelease];
 		cell.selectionStyle = selectable ? UITableViewCellSelectionStyleBlue : UITableViewCellSelectionStyleNone;
+						
 		
-		SEL initCellSelector = NSSelectorFromString([NSString stringWithFormat:@"initCellFor%@:indexPath:", identifier]);
+			SEL initCellSelector = NSSelectorFromString([NSString stringWithFormat:@"initCellFor%@:indexPath:", identifier]);
 		if ([self respondsToSelector:initCellSelector]) {
 			[self performSelector:initCellSelector withObject:cell withObject:indexPath];
 		}
@@ -181,7 +191,7 @@
 // Add a highlight row at the top. You need to separately add a dark shadow via
 // the table separator.
 - (void)addHighlightToCell:(UITableViewCell *)cell {
-	UIView *highlight = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 1)];
+	UIView *highlight = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 1)];
 	highlight.backgroundColor = [UVStyleSheet topSeparatorColor];
 	highlight.opaque = YES;
 	[cell.contentView addSubview:highlight];
@@ -197,6 +207,7 @@
 
 // Implement loadView to create a view hierarchy programmatically, without using a nib.
 - (void)loadView {
+	[super loadView];
 	[self initNavigationItem];
 }
 
@@ -217,6 +228,11 @@
 
 - (void)dealloc {
     [super dealloc];
+}
+
+
+- (BOOL) shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
+  return YES;
 }
 
 

@@ -130,6 +130,7 @@
 // Implement loadView to create a view hierarchy programmatically, without using a nib.
 - (void)loadView {
 	// Hide the nav bar
+	[super loadView];
 	self.navigationController.navigationBarHidden = YES;
 
 	[super loadView];
@@ -138,14 +139,58 @@
 	UIView *contentView = [[UIView alloc] initWithFrame:frame];
 	
 	UIImageView *image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"uv_splash.png"]];
+	image.frame = self.view.bounds;
 	[contentView addSubview:image];
 	[image release];
+	image.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	UILabel *feedbackLabel = [[[UILabel alloc]initWithFrame:CGRectZero]autorelease];
+	feedbackLabel.text = @"Loading Feedback";
+	feedbackLabel.font = [UIFont fontWithName:@"Helvetica" size:20];
+	feedbackLabel.shadowColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:.5];
+	feedbackLabel.textColor = [UIColor colorWithRed:.1 green:.1 blue:.4 alpha:1];
+	feedbackLabel.shadowOffset = CGSizeMake(0, 1);
+	feedbackLabel.backgroundColor = [UIColor clearColor];
+	[contentView addSubview:feedbackLabel];
+	
+	CGSize maximumLabelSize = CGSizeMake(300,20);
+	CGSize expectedLabelSize = [feedbackLabel.text sizeWithFont:feedbackLabel.font 
+															constrainedToSize:maximumLabelSize 
+																	lineBreakMode:feedbackLabel.lineBreakMode]; 
+	feedbackLabel.frame = CGRectMake(contentView.frame.size.width/2-(expectedLabelSize.width+40)/2, 
+																	 contentView.frame.size.height/2-40/2, 
+																	 expectedLabelSize.width+40, 40);
+	feedbackLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin |
+	UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+	
 	
 	UIActivityIndicatorView *activity = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-	activity.center = CGPointMake(frame.size.width / 2, (frame.size.height / 2) - 20);
-	[contentView addSubview:activity];
+	activity.center = CGPointMake(expectedLabelSize.width+25, 40/2-1);
+	activity.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin |
+	UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+		
+	[feedbackLabel addSubview:activity];
 	[activity startAnimating];
 	[activity release];
+	
+	
+	UILabel *subtitleLabel = [[[UILabel alloc]initWithFrame:CGRectZero]autorelease];
+	subtitleLabel.text = @"Connecting to the UserVoice feedback system";
+	subtitleLabel.font = [UIFont fontWithName:@"Helvetica" size:14];
+	subtitleLabel.shadowColor = [UIColor colorWithRed:1 green:1 blue:1 alpha:.5];
+	subtitleLabel.textColor = [UIColor colorWithRed:.5 green:.5 blue:.7 alpha:1];
+	subtitleLabel.shadowOffset = CGSizeMake(0, 1);
+	subtitleLabel.backgroundColor = [UIColor clearColor];
+	[contentView addSubview:subtitleLabel];
+	
+	expectedLabelSize = [subtitleLabel.text sizeWithFont:subtitleLabel.font 
+																						constrainedToSize:maximumLabelSize 
+																								lineBreakMode:subtitleLabel.lineBreakMode]; 
+	subtitleLabel.frame = CGRectMake(contentView.frame.size.width/2-expectedLabelSize.width/2, 
+																	 contentView.frame.size.height/2+40/2, 
+																	 expectedLabelSize.width, 40);
+	subtitleLabel.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin |
+	UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
+	
 	
 	self.view = contentView;
 	[contentView release];

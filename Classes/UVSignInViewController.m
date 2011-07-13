@@ -83,9 +83,9 @@
 }
 
 - (void)addForgotPasswordFooter {
-	UIView *footer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 25)];	
+	UIView *footer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 25)];	
 	UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-	button.frame = CGRectMake(0, 10, 320, 15);
+	button.frame = CGRectMake(0, 10, self.view.frame.size.width, 15);
 	NSString *buttonTitle = @"Forgot your password?";
 	[button setTitle:buttonTitle forState:UIControlStateNormal];
 	[button setTitleColor:[UVStyleSheet dimBlueColor] forState:UIControlStateNormal];
@@ -340,10 +340,10 @@
 
 - (UIView *)viewWithText:(NSString *)text {
 	CGFloat height = [self heightForViewWithText:text];
-	UIView *textView = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, height)] autorelease];
+	UIView *textView = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, height)] autorelease];
 	textView.backgroundColor = [UIColor clearColor];
 	
-	UILabel *msg = [[UILabel alloc] initWithFrame:CGRectMake(20, 23, 280, height - 40)];
+	UILabel *msg = [[UILabel alloc] initWithFrame:CGRectMake(20, 23, self.view.frame.size.width-20, height - 40)];
 	msg.text = text;
 	msg.lineBreakMode = UILineBreakModeWordWrap;
 	msg.numberOfLines = 0;
@@ -385,7 +385,7 @@
 		return [self viewWithText:[self headerTextForSection:section]];
 	} else {
 		CGFloat height = [self tableView:self.tableView heightForHeaderInSection:section];
-		return [[[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, height)] autorelease];
+		return [[[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, height)] autorelease];
 	}
 }
 

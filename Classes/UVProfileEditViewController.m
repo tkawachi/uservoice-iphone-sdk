@@ -227,8 +227,8 @@
 
 - (UIView *)tableView:(UITableView *)theTableView viewForFooterInSection:(NSInteger)section {
 	if (section == UV_PROFILE_SECTION_DETAILS) {
-		UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
-		UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(18, 7, 284, 30)];
+		UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 40)];
+		UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(18, 7, self.view.frame.size.width-36, 30)];
 		
 		label.text = @"Changing your email address will require it to be confirmed again.";
 		label.textColor = [UVStyleSheet dimBlueColor];
@@ -243,8 +243,8 @@
 
 	} else if (section == UV_PROFILE_SECTION_LOGOUT) {
 		if ([self.user hasUnconfirmedEmail]) {
-			UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 30)];
-			UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(38, 0, 300, 40)];
+			UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 30)];
+			UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(38, 0, self.view.frame.size.width-48, 40)];
 			
 			UIImageView *icon = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"uv_alert.png"]];
 			icon.frame = CGRectMake(18, 10, 18, 18);
@@ -285,7 +285,8 @@
 	theTableView.dataSource = self;
 	theTableView.delegate = self;
 	theTableView.backgroundColor = [UIColor clearColor];
-	
+	theTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+
 	self.tableView = theTableView;
 	[contentView addSubview:theTableView];
 	[theTableView release];

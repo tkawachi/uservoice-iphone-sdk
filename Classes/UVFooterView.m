@@ -41,15 +41,25 @@
 }
 
 + (UIView *)getHeaderView {
-	UIView *bottomShadow = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 10)] autorelease];
+	UIView *bottomShadow = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, 
+																																	 [UIScreen mainScreen].applicationFrame.size.width, 
+																																	 10)] autorelease];
 	UIImage *shadow = [UIImage imageNamed:@"dropshadow_bottom_30.png"];
 	UIImageView *shadowView = [[[UIImageView alloc] initWithImage:shadow] autorelease];
+	CGRect fr = shadowView.frame;
+	shadowView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+	fr.size.width = bottomShadow.frame.size.width;
+	shadowView.frame = fr;
 	[bottomShadow addSubview:shadowView];	
+
 	return bottomShadow;
 }
 
 + (UVFooterView *)footerViewForController:(UVBaseViewController *)controller {
-	UVFooterView *footer = [[[UVFooterView alloc ]initWithFrame:CGRectMake(0, 0, 320, [UVFooterView heightForFooter])] autorelease];
+	UVFooterView *footer = [[[UVFooterView alloc ]initWithFrame:CGRectMake(0, 
+																																				 0,
+																																				 [UIScreen mainScreen].applicationFrame.size.width,
+																																				 [UVFooterView heightForFooter])] autorelease];
 	footer.controller = controller;
 	
 	UITableView *theTableView = [[UITableView alloc] initWithFrame:footer.bounds style:UITableViewStyleGrouped];
@@ -59,8 +69,12 @@
 	theTableView.sectionHeaderHeight = 10.0;
 	theTableView.sectionFooterHeight = 8.0;		
 	theTableView.tableHeaderView = [self getHeaderView];
-		
-	UIView *tableFooter = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 25)] autorelease];
+	theTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+
+	UIView *tableFooter = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, 
+																																	[UIScreen mainScreen].applicationFrame.size.width, 
+																																	25)] autorelease];
+	tableFooter.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 	UILabel *poweredBy = [[[UILabel alloc] initWithFrame:CGRectMake(30, 10, 240, 14)] autorelease];
 	poweredBy.text = @"Feedback powered by UserVoice";
 	poweredBy.font = [UIFont systemFontOfSize:14.0];

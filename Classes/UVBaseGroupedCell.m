@@ -16,25 +16,22 @@
     if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
         // Initialization code
 		self.selectionStyle = UITableViewCellSelectionStyleNone;
-    }
+			self.autoresizingMask = UIViewAutoresizingFlexibleWidth
+			;
+			self.contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+			NSLog(@"made a grouped cell");
+			UIView *backView = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width,71)] autorelease];
+			self.backgroundView = backView; 
+			backView = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width,71)] autorelease];
+			self.selectedBackgroundView = backView; 
+		}
     return self;
 }
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
-	UIView *selectedBackView = [[[UIView alloc] initWithFrame:CGRectMake(-10, 0, 320, 71)] autorelease];
-	selectedBackView.backgroundColor = [UIColor clearColor];
-	self.selectedBackgroundView = selectedBackView;
-}
 
 - (void)layoutSubviews {	
     [super layoutSubviews];
 	
-	UIView *backView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
-	backView.backgroundColor = [UIColor clearColor];
-	self.backgroundView = backView; 
 }
 
 - (void)dealloc {

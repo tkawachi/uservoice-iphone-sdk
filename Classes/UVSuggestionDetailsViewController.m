@@ -167,13 +167,13 @@
 	[self removeBackgroundFromCell:cell];
 	cell.selectionStyle = UITableViewCellSelectionStyleNone;
 	
-	UIView *bg = [[UILabel alloc] initWithFrame:CGRectMake(-10, 0, 320, 72)];		
+	UIView *bg = [[UILabel alloc] initWithFrame:CGRectMake(-10, 0, self.view.frame.size.width, 72)];		
 	bg.backgroundColor = [UVStyleSheet lightBgColor];
-	[cell.contentView addSubview:bg];
+	//[cell.contentView addSubview:bg];
 	[bg release];
 	
 	if ([suggestion.status isEqualToString:@"completed"]) {
-		UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, 300, 44)];
+		UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, self.view.frame.size.width-20, 44)];
 		label.tag = NO_VOTE_LABEL_TAG;
 		label.numberOfLines = 2;
 		label.opaque = YES;
@@ -236,13 +236,13 @@
 	[self removeBackgroundFromCell:cell];
 	NSInteger height = [self textSize].height > 0 ? [self textSize].height + 10 : 0;
 	
-	UIView *bg = [[UILabel alloc] initWithFrame:CGRectMake(-10, 0, 320, height)];		
+	UIView *bg = [[UILabel alloc] initWithFrame:CGRectMake(-10, 0, self.view.frame.size.width, height)];		
 	bg.backgroundColor = [UVStyleSheet lightBgColor];
 	[cell.contentView addSubview:bg];
 	[bg release];
 
 	// The default margins are too large for the body, so we're using our own label.
-	UILabel *body = [[[UILabel alloc] initWithFrame:CGRectMake(0, -3, 300, [self textSize].height)] autorelease];
+	UILabel *body = [[[UILabel alloc] initWithFrame:CGRectMake(0, -3, self.view.frame.size.width, [self textSize].height)] autorelease];
 	body.text = self.suggestion.text;
 	body.font = [UIFont systemFontOfSize:13];
 	body.lineBreakMode = UILineBreakModeWordWrap;
@@ -278,7 +278,7 @@
 	[self removeBackgroundFromCell:cell];
 	
 	
-	UIView *bg = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 75)];		
+	UIView *bg = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 75)];		
 	bg.backgroundColor = [UVStyleSheet lightBgColor];
 	[cell.contentView addSubview:bg];
 	[bg release];
@@ -443,20 +443,20 @@
 // Implement loadView to create a view hierarchy programmatically, without using a nib.
 - (void)loadView {
 	[super loadView];
-
 	self.navigationItem.title = self.suggestion.title;
 	
-	CGRect frame = [self contentFrame];
+	CGRect frame = self.view.bounds;
 	UIView *contentView = [[UIView alloc] initWithFrame:frame];
 	
-	UITableView *theTableView = [[UITableView alloc] initWithFrame:contentView.bounds style:UITableViewStyleGrouped];
+	UITableView *theTableView = [[UITableView alloc] initWithFrame:frame style:UITableViewStylePlain];
 	theTableView.sectionHeaderHeight = 0.0;
 	theTableView.sectionFooterHeight = 0.0;
+	theTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+
 	theTableView.contentInset = UIEdgeInsetsMake(-10, 0, 0, 0);
-	
-	NSInteger height = MAX([self titleSize].height + 347, 383);
+		NSInteger height = MAX([self titleSize].height + 347, 383);
 	height += [self textSize].height > 0 ? [self textSize].height + 10 : 0;
-	UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, height)];  
+	UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, height)];  
 	headerView.backgroundColor = [UIColor clearColor];
 	
 	UIImage *shadow = [UIImage imageNamed:@"dropshadow_top_20.png"];	
@@ -464,19 +464,21 @@
 	[headerView addSubview:shadowView];	
 	[shadowView release];
 	
-	UIView *bg = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, 320, height)];		
-	bg.backgroundColor = [UVStyleSheet lightBgColor];
-	[headerView addSubview:bg];
-	[bg release];
+	//UIView *bg = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, self.view.frame.size.width, height)];		
+	//bg.backgroundColor = [UVStyleSheet lightBgColor];
+	//[headerView addSubview:bg];
+	//[bg release];
 	
 	// Votes
 	UVSuggestionChickletView *chicklet = [UVSuggestionChickletView suggestionChickletViewWithOrigin:CGPointMake(10, 20)];
 	chicklet.tag = CHICKLET_TAG;
+
 	[headerView addSubview:chicklet];
 	
 	// Title
 	CGSize titleSize = [self titleSize];
 	UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(75, 20, titleSize.width, titleSize.height)];
+
 	label.text = self.suggestion.title;
 	label.font = [UIFont boldSystemFontOfSize:18.0];
 	label.textAlignment = UITextAlignmentLeft;
@@ -497,15 +499,19 @@
 	[headerView addSubview:label];
 	[label release];
 	NSInteger yOffset = MAX([self titleSize].height + 55, 90);
-	UITableView *theInnerTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, yOffset, 320, MAX([self titleSize].height + 273, 313)) 
+	UITableView *theInnerTableView = [[UITableView alloc] initWithFrame:CGRectMake(0, yOffset, self.view.frame.size.width, MAX([self titleSize].height + 273, 313)) 
 																  style:UITableViewStyleGrouped];
 	theInnerTableView.dataSource = self;
 	theInnerTableView.delegate = self;
 	theInnerTableView.sectionHeaderHeight = 0.0;
 	theInnerTableView.sectionFooterHeight = 3.0;
-	theInnerTableView.backgroundColor = [UVStyleSheet lightBgColor];
+	theInnerTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+
+	//theInnerTableView.backgroundColor = [UVStyleSheet lightBgColor];
 	self.innerTableView = theInnerTableView;
 	[headerView addSubview:theInnerTableView];
+	theInnerTableView.backgroundView = nil;
+	
 	
 	theTableView.tableHeaderView = headerView;
 	theTableView.tableFooterView = [UVFooterView footerViewForController:self];
@@ -513,10 +519,12 @@
 	[contentView addSubview:theTableView];
 	
 	self.tableView = theTableView;
+	tableView.backgroundColor = [UVStyleSheet lightBgColor];
 	[theTableView release];
 
 	self.view = contentView;
 	[contentView release];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated {

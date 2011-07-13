@@ -128,7 +128,7 @@
 // creating a new suggestion.
 - (void)initCellForAdd:(UITableViewCell *)cell indexPath:(NSIndexPath *)indexPath {
 	// getting the cell size
-    CGRect contentRect = cell.contentView.bounds;
+    CGRect contentRect = cell.contentView.frame;
 	UVButtonWithIndex *button = [[UVButtonWithIndex alloc] initWithIndex:indexPath.row andFrame:contentRect];	
 	[button addTarget:self action:@selector(addSuggestion:) forControlEvents:UIControlEventTouchUpInside];		
 	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -243,11 +243,6 @@
 
 #pragma mark ===== UITableViewDelegate Methods =====
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	// Both for suggestions and Load More
-	return 71;
-}
-
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
 	return nil;
 }
@@ -302,7 +297,7 @@
 	//NSLog(@"textEditorShouldBeginEditing");
 	UIView *headerView = (UIView *)self.tableView.tableHeaderView;	
 	NSInteger height = self.view.bounds.size.height - 216;
-	CGRect frame = CGRectMake(0, 10, 320, height);
+	CGRect frame = CGRectMake(0, 10, self.view.frame.size.width, height);
 	UIView *textBar = [headerView viewWithTag:UV_SEARCH_TEXTBAR];
 	
 	// Maximize header view to allow text editor to grow (leaving room for keyboard) 216
@@ -313,7 +308,7 @@
 	
 	textBar.frame = frame;
 	textBar.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.7];		
-	frame = CGRectMake(0, 0, 320, 40);
+	frame = CGRectMake(0, 0, self.view.frame.size.width, 40);
 	theTextEditor.frame = frame;  // (may not actually need to change this, since bg is white)
 	theTextEditor.backgroundColor = [UIColor whiteColor];	
 	
@@ -348,7 +343,7 @@
 	
 	// Minimize text editor and header
 	[UIView beginAnimations:@"shrinkHeader" context:nil];
-	textBar.frame = CGRectMake(0, 10, 320, 40);
+	textBar.frame = CGRectMake(0, 10, self.view.frame.size.width, 40);
 	textBar.backgroundColor = [UIColor whiteColor];
 	
 	[self setCellsEnabled:YES];
@@ -366,21 +361,20 @@
 	[super loadView];
 
 	self.navigationItem.title = self.forum.currentTopic.prompt;
-
-	CGRect frame = [self contentFrame];
-	UIView *contentView = [[UIView alloc] initWithFrame:frame];
 	
-	UITableView *theTableView = [[UITableView alloc] initWithFrame:contentView.bounds style:UITableViewStyleGrouped];
+	UITableView *theTableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
 	theTableView.dataSource = self;
 	theTableView.delegate = self;
 	theTableView.contentInset = UIEdgeInsetsMake(-10, 0, 0, 0);
 	theTableView.sectionFooterHeight = 0.0;
 	theTableView.sectionHeaderHeight = 0.0;
-	
+	theTableView.rowHeight = 71;
+
+	theTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	[self addShadowSeparatorToTableView:theTableView];
 	
 	NSInteger headerHeight = [self supportsSearch] ? 50 : 10;
-	UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, headerHeight)];  
+	UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, headerHeight)];  
 	headerView.backgroundColor = [UIColor clearColor];
 	
 	UIImage *shadow = [UIImage imageNamed:@"dropshadow_top_20.png"];	
@@ -390,11 +384,11 @@
 
 	if ([self supportsSearch]) {		
 		// Add text editor to table header
-		UIView *textBar = [[UIView alloc] initWithFrame:CGRectMake(0, 10, 320, 40)];
+		UIView *textBar = [[UIView alloc] initWithFrame:CGRectMake(0, 10, self.view.frame.size.width, 40)];
 		textBar.backgroundColor = [UIColor whiteColor];
 		textBar.tag = UV_SEARCH_TEXTBAR;
 		
-		_textEditor = [[UVTextEditor alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
+		_textEditor = [[UVTextEditor alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 40)];
 		_textEditor.delegate = self;
 		_textEditor.autocorrectionType = UITextAutocorrectionTypeYes;
 		_textEditor.minNumberOfLines = 1;
@@ -415,7 +409,7 @@
 		theTableView.tableFooterView = [UVFooterView footerViewForController:self];
 		
 	} else {
-		UIView *bottomShadow = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 10)];
+		UIView *bottomShadow = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 10)];
 		UIImage *shadow = [UIImage imageNamed:@"dropshadow_bottom_30.png"];
 		UIImageView *shadowView = [[UIImageView alloc] initWithImage:shadow];
 		[bottomShadow addSubview:shadowView];	
@@ -425,11 +419,9 @@
 	}
 	
 	self.tableView = theTableView;
-	[contentView addSubview:theTableView];
+	[self.view addSubview:theTableView];
 	[theTableView release];
 	
-	self.view = contentView;
-	[contentView release];
 }
 
 - (void)reloadTableData {

@@ -32,7 +32,11 @@
     if (cell == nil) {
         cell = [[[UVBaseGroupedCell alloc] initWithStyle:style reuseIdentifier:identifier] autorelease];
 		cell.selectionStyle = selectable ? UITableViewCellSelectionStyleBlue : UITableViewCellSelectionStyleNone;
-		
+			//CGRect f = cell.contentView.frame;
+		//	f.size.width = tableView.frame.size.width;
+			//f.origin.x = 0;
+			//cell.contentView.frame = f;
+
 		SEL initCellSelector = NSSelectorFromString([NSString stringWithFormat:@"initCellFor%@:indexPath:", identifier]);
 		if ([self respondsToSelector:initCellSelector]) {
 			[self performSelector:initCellSelector withObject:cell withObject:indexPath];
@@ -61,8 +65,14 @@
 
 - (void)initCellForSuggestion:(UITableViewCell *)cell indexPath:(NSIndexPath *)indexPath {
 	// getting the cell size
-    CGRect contentRect = cell.contentView.bounds;
-	UVSuggestionButton *button = [[UVSuggestionButton alloc] initWithIndex:indexPath.row andFrame:contentRect];	
+	UIColor *bgColor = indexPath.row % 2 == 0 ?  [UVStyleSheet lightZebraBgColor]: [UVStyleSheet darkZebraBgColor];
+  cell.backgroundView.backgroundColor = bgColor;
+
+	  CGRect contentRect = cell.contentView.frame;
+	contentRect.size.height = 71;
+	contentRect.size.width = self.view.frame.size.width;
+	NSLog(@"the cell suggestion frame is %f %f %f %f", contentRect.origin.x, contentRect.origin.y, contentRect.size.width, contentRect.size.height);
+  UVSuggestionButton *button = [[UVSuggestionButton alloc] initWithIndex:indexPath.row andFrame:contentRect];	
 	//NSLog(@"Init suggestion with index: %d", indexPath.row);
 	
 	[button addTarget:self action:@selector(pushSuggestionShowView:) forControlEvents:UIControlEventTouchUpInside];	
@@ -83,14 +93,15 @@
 
 - (void)initCellForLoad:(UITableViewCell *)cell indexPath:(NSIndexPath *)indexPath {
 	//NSLog(@"Load more index: %d", indexPath.row);
-	
+
 	CGRect contentRect = cell.contentView.bounds;
+	contentRect.size.height = 71;
 	UVButtonWithIndex *button = [[UVButtonWithIndex alloc] initWithIndex:indexPath.row andFrame:contentRect];	
 	[button addTarget:self action:@selector(retrieveMoreSuggestions) forControlEvents:UIControlEventTouchUpInside];	
 	cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
 	
 	// Can't use built-in textLabel, as this forces a white background
-	UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 26, 320, 18)];
+	UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 26, self.view.frame.size.width, 18)];
 	textLabel.text = @"Load more ideas...";
 	textLabel.textColor = [UIColor blackColor];
 	textLabel.backgroundColor = [UIColor clearColor];
@@ -104,8 +115,8 @@
 }
 
 - (void)customizeCellForLoad:(UITableViewCell *)cell indexPath:(NSIndexPath *)indexPath {
-	UIColor *bgColor = indexPath.row % 2 == 0 ? [UVStyleSheet darkZebraBgColor] : [UVStyleSheet lightZebraBgColor];
-	cell.backgroundView.backgroundColor = bgColor;
+	UIColor *bgColor = indexPath.row % 2 == 0 ?  [UVStyleSheet lightZebraBgColor]: [UVStyleSheet darkZebraBgColor];
+  cell.backgroundView.backgroundColor = bgColor;
 }
 
 #pragma mark ===== basic view methods =====

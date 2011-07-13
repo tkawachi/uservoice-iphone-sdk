@@ -77,7 +77,7 @@
 }
 
 - (UIView *)createHeaderView {
-	UIView *header = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 84)] autorelease];
+	UIView *header = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 84)] autorelease];
 	header.backgroundColor = [UIColor clearColor];
 	
 	// Name
@@ -274,7 +274,7 @@
 	theTableView.backgroundColor = [UIColor clearColor];
 	
 	theTableView.tableHeaderView = [self createHeaderView];
-	
+	theTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	[contentView addSubview:theTableView];
 	self.tableView = theTableView;
 	[theTableView release];

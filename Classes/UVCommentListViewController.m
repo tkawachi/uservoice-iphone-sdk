@@ -159,7 +159,7 @@
 	// Maximize header view to allow text editor to grow (leaving room for keyboard)
 	[UIView beginAnimations:@"growHeader" context:nil];
 	NSInteger height = self.view.bounds.size.height - 216;
-	CGRect frame = CGRectMake(0, 0, 320, height);
+	CGRect frame = CGRectMake(0, 0, self.view.frame.size.width, height);
 	UIView *textBar = (UIView *)self.tableView.tableHeaderView;
 	textBar.frame = frame;
 	textBar.backgroundColor = [UIColor whiteColor];
@@ -172,10 +172,10 @@
 	
 	// Minimize text editor and header
 	[UIView beginAnimations:@"shrinkHeader" context:nil];
-	theTextEditor.frame = CGRectMake(5, 0, 315, 40);
+	theTextEditor.frame = CGRectMake(5, 0, self.view.frame.size.width-5, 40);
 	UIView *textBar = (UIView *)self.tableView.tableHeaderView;
-	textBar.frame = CGRectMake(0, 0, 320, 40);
-	theTextEditor.frame = CGRectMake(5, 0, 315, 40);
+	textBar.frame = CGRectMake(0, 0, self.view.frame.size.width, 40);
+	theTextEditor.frame = CGRectMake(5, 0, self.view.frame.size.width-5, 40);
 	[UIView commitAnimations];
 }
 
@@ -276,7 +276,7 @@
 	[self addHighlightToCell:cell];
 
 	// Can't use built-in textLabel, as this forces a white background
-	UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 27, 320, 16)];
+	UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 27, self.view.frame.size.width, 16)];
 	textLabel.text = @"Load more comments...";
 	textLabel.textColor = [UIColor darkGrayColor];
 	textLabel.backgroundColor = [UIColor clearColor];
@@ -344,7 +344,7 @@
 // Implement loadView to create a view hierarchy programmatically, without using a nib.
 - (void)loadView {
 	[super loadView];
-	
+
 	if (self.suggestion.commentsCount == 1) {
 		self.navigationItem.title = @"1 Comment";
 	} else {
@@ -358,20 +358,23 @@
 	theTableView.dataSource = self;
 	theTableView.delegate = self;	
 	theTableView.backgroundColor = [UIColor clearColor];
-	
+	theTableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+
 	[self addShadowSeparatorToTableView:theTableView];
 
 	// Add text editor to table header
-	UIView *textBar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
+	UIView *textBar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 40)];
 	textBar.backgroundColor = [UIColor whiteColor];
 	// TTSTYLE(commentTextBar)
-	UVTextEditor *theTextEditor = [[UVTextEditor alloc] initWithFrame:CGRectMake(5, 0, 315, 40)];
+	UVTextEditor *theTextEditor = [[UVTextEditor alloc] initWithFrame:CGRectMake(5, 0, self.view.frame.size.width-10, 40)];
 	theTextEditor.delegate = self;
 	theTextEditor.autocorrectionType = UITextAutocorrectionTypeYes;
 	theTextEditor.minNumberOfLines = 1;
 	theTextEditor.maxNumberOfLines = 8;
 	theTextEditor.autoresizesToText = YES;
 	theTextEditor.backgroundColor = [UIColor clearColor];
+	theTextEditor.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+
 	//theTextEditor.style = TTSTYLE(commentTextBarTextField);
 	theTextEditor.placeholder = @"Add a comment...";
 	[textBar addSubview:theTextEditor];
@@ -381,7 +384,7 @@
 	[textBar release];
 
 	// Add empty footer, to suppress blank cells (with separators) after actual content
-	UIView *footer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 0)];
+	UIView *footer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 0)];
 	theTableView.tableFooterView = footer;
 	[footer release];
 	
@@ -391,8 +394,10 @@
 	
 	self.view = contentView;
 	[contentView release];
-	
+	self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+
 	[self addGradientBackground];
+	
 }
 
 - (void)viewWillAppear:(BOOL)animated {

@@ -47,12 +47,12 @@
 	CGRect frame = [self contentFrame];
 	UIView *contentView = [[UIScrollView alloc] initWithFrame:frame];
 
-	UIView *statusLine = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 8)];
+	UIView *statusLine = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 8)];
 	statusLine.backgroundColor = self.suggestion.statusColor;
 	[contentView addSubview:statusLine];
 	[statusLine release];
 	
-	UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 8, 320, contentView.bounds.size.height - 8)];
+	UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 8, self.view.frame.size.width, contentView.bounds.size.height - 8)];
 
 	// User Chicklet
 	UVUserChickletView *chicklet = [UVUserChickletView userChickletViewWithOrigin:CGPointMake(10, 10)
@@ -84,7 +84,7 @@
 	[scrollView addSubview:body];
 	[body release];
 	
-	scrollView.contentSize = CGSizeMake(320, body.bounds.size.height + 28);
+	scrollView.contentSize = CGSizeMake(self.view.frame.size.width, body.bounds.size.height + 28);
 	
 	[contentView addSubview:scrollView];
 	[scrollView release];

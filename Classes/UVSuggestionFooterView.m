@@ -34,9 +34,9 @@
 
 - (id)initWithSuggestion:(UVSuggestion *)theSuggestion andController:(UVBaseViewController *)theController {
 	if (self = (UVSuggestionFooterView *)[UVSuggestionFooterView footerViewForController:controller]) {
-		UIView *wrapper = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 100)];
+		UIView *wrapper = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 100)];
 		
-		UIView *bg = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 82)];		
+		UIView *bg = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 82)];		
 		bg.backgroundColor = [UVStyleSheet lightBgColor];
 		[wrapper addSubview:bg];
 		[bg release];
@@ -81,7 +81,7 @@
 		[wrapper addSubview:label];
 		[label release];
 		
-		UIView *bottomShadow = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 10)] autorelease];
+		UIView *bottomShadow = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 10)] autorelease];
 		UIImage *shadow = [UIImage imageNamed:@"dropshadow_bottom_30.png"];
 		UIImageView *shadowView = [[[UIImageView alloc] initWithImage:shadow] autorelease];
 		[bottomShadow addSubview:shadowView];

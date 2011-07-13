@@ -501,7 +501,7 @@
 
 - (UIView *)tableView:(UITableView *)theTableView viewForHeaderInSection:(NSInteger)section {
 	CGFloat height = [self tableView:theTableView heightForHeaderInSection:section];
-	return [[[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, height)] autorelease];
+	return [[[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, height)] autorelease];
 }
 
 - (void)tableView:(UITableView *)theTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -536,8 +536,8 @@
 	theTableView.sectionFooterHeight = 0.0;
 	theTableView.backgroundColor = [UIColor clearColor];
 	
-	UIView *footer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 50)];
-	UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, 320, 15)];
+	UIView *footer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 50)];
+	UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 10, self.view.frame.size.width, 15)];
 	label.text = @"Want to send a private message instead?";
 	label.textAlignment = UITextAlignmentCenter;
 	label.textColor = [UVStyleSheet dimBlueColor];
@@ -547,7 +547,7 @@
 	[label release];
 
 	UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-	button.frame = CGRectMake(0, 25, 320, 15);
+	button.frame = CGRectMake(0, 25, self.view.frame.size.width, 15);
 	NSString *buttonTitle = [NSString stringWithFormat:@"Contact %@", [UVSession currentSession].clientConfig.subdomain.name];
 	[button setTitle:buttonTitle forState:UIControlStateNormal];
 	[button setTitleColor:[UVStyleSheet dimBlueColor] forState:UIControlStateNormal];

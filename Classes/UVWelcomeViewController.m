@@ -96,14 +96,14 @@
 	[self removeBackgroundFromCell:cell];
 	cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		
-	UIView *bg = [[UILabel alloc] initWithFrame:CGRectMake(-10, -10, 320, 55)];		
+	UIView *bg = [[UILabel alloc] initWithFrame:CGRectMake(-10, -10, cell.contentView.frame.size.width, 55)];		
 	bg.backgroundColor = [UVStyleSheet lightBgColor];
 	[cell.contentView addSubview:bg];
 	[bg release];
 	
 	UIButton *myButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
 	myButton.tag = UV_FORUM_LIST_TAG_CELL_LABEL;
-    myButton.frame = CGRectMake(0, 0, 300, 44); // position in the parent view and set the size of the button
+    myButton.frame = cell.contentView.frame; // position in the parent view and set the size of the button
     [myButton setTitle:[_forum prompt] forState:UIControlStateNormal];
     [myButton addTarget:self action:@selector(pushForumView) forControlEvents:UIControlEventTouchUpInside];
 	[myButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
@@ -142,7 +142,7 @@
 	[self removeBackgroundFromCell:cell];
 	cell.selectionStyle = UITableViewCellSelectionStyleNone;
 	
-	UIView *bg = [[UILabel alloc] initWithFrame:CGRectMake(-10, -10, 320, 55)];		
+	UIView *bg = [[UILabel alloc] initWithFrame:CGRectMake(-10, -10, self.view.frame.size.width, 55)];		
 	bg.backgroundColor = [UVStyleSheet lightBgColor];
 	[cell.contentView addSubview:bg];
 	[bg release];
@@ -191,7 +191,7 @@
 	[self removeBackgroundFromCell:cell];	
 	cell.selectionStyle = UITableViewCellSelectionStyleNone;
 	
-	UIView *bg = [[UILabel alloc] initWithFrame:CGRectMake(-10, -10, 320, 80)];		
+	UIView *bg = [[UILabel alloc] initWithFrame:CGRectMake(-10, -10, self.view.frame.size.width, 80)];		
 	bg.backgroundColor = [UVStyleSheet lightBgColor];
 	[cell.contentView addSubview:bg];
 	[bg release];
@@ -237,7 +237,7 @@
 	[self removeBackgroundFromCell:cell];	
 	cell.selectionStyle = UITableViewCellSelectionStyleNone;
 	
-	UIView *bg = [[UILabel alloc] initWithFrame:CGRectMake(-10, -10, 320, 11)];		
+	UIView *bg = [[UILabel alloc] initWithFrame:CGRectMake(-10, -10, self.view.frame.size.width, 11)];		
 	bg.backgroundColor = [UVStyleSheet lightBgColor];
 	[cell.contentView addSubview:bg];
 	[bg release];
@@ -245,10 +245,10 @@
 
 - (UIView *)viewWithHeader:(NSString *)header subheader:(NSString *)subheader {
 	CGFloat height = [self heightForViewWithHeader:header subheader:subheader];
-	UIView *headerView = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, height)] autorelease];
+	UIView *headerView = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, height)] autorelease];
 	headerView.backgroundColor = [UVStyleSheet lightBgColor];
 	
-	UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(20, 5, 280, 35)];
+	UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(20, 5, self.view.frame.size.width-40, 35)];
 	title.text = header;
 	title.font = [UIFont boldSystemFontOfSize:18];
 	title.backgroundColor = [UIColor clearColor];
@@ -392,26 +392,31 @@
 	[super loadView];
 	[self.navigationItem setHidesBackButton:YES animated:NO];
 	
-	CGRect frame = [self contentFrame];	
-	_tableView = [[UITableView alloc] initWithFrame:frame style:UITableViewStyleGrouped];
+	_tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
 	_tableView.dataSource = self;
 	_tableView.delegate = self;
 	_tableView.contentInset = UIEdgeInsetsMake(-10, 0, 0, 0);
 	_tableView.sectionFooterHeight = 0.0;
 	_tableView.sectionHeaderHeight = 0.0;
+	_tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+		
+	UIView *topShadow = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 20)];  
+	topShadow.backgroundColor = [UIColor redColor];
+	topShadow.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 	
-	UIView *topShadow = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 10)];  
 	UIImage *shadow = [UIImage imageNamed:@"dropshadow_top_20.png"];
-	
+	shadow = [shadow stretchableImageWithLeftCapWidth:1 topCapHeight:0]; 
 	UIImageView *shadowView = [[UIImageView alloc] initWithImage:shadow];
-	[topShadow addSubview:shadowView];	
+	shadowView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+	//[topShadow addSubview:shadowView];	
 	_tableView.tableHeaderView = shadowView;
 	
 	[shadowView release];
 	[topShadow release];
 
-	_tableView.tableFooterView = [UVFooterView footerViewForController:self];			
-	self.view = _tableView;	
+	_tableView.tableFooterView = [UVFooterView footerViewForController:self];		
+	_tableView.tableFooterView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	[self.view addSubview: _tableView];	
 	
 	if ([UVSession currentSession].clientConfig.questionsEnabled) {
 		_questions = [UVSession currentSession].clientConfig.questions;
